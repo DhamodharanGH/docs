@@ -321,3 +321,195 @@ print response
 
 ```
 
+## Integrating with NodeJS
+
+Its recommended to use Peipost SDK for NodeJS in order to integrate Pepipost services with applications written in NodeJS. 
+
+You can install it using npm "npm install pepipost-sdk-nodejs". 
+
+You can get its source code by <a href="https://github.com/pepipost/pepipost-sdk-nodejs" target="_blank">  clicking here </a> .
+
+### Basic Example
+
+```js
+var PepipostSDK = require('pepipost-sdk-nodejs');
+
+var Email = PepipostSDK.EmailController;
+
+var data = {
+    "api_key": "yoursecretapikey",
+    "email_details": {
+        "fromname": "yourfromname",
+        "subject": "this is test email subject",
+        "from": "from@example.com",
+        "content": "<p> hi, this is a test email sent via Pepipost JSON API.</p>"
+    },
+    "recipients": [
+        "recipient@example.com"
+    ]
+};
+
+Email.send(data,callback_mail_sent);
+
+function callback_mail_sent(err_msg,parsed,context){
+    if(parsed.errorcode==0){
+        console.log("mail sent successfully.\n");
+    }
+    else{
+        console.log("Email sent Failed.\n");
+        console.log("errormessage("+parsed.errormessage+")\n");
+        console.log("errorcode("+parsed.errorcode+")\n");
+    }    
+}
+```
+
+## Integrating with Java
+
+Its recommended to use Peipost SDK for Java in order to integrate Pepipost services with applications written in Java. You can get Pepipost SDK for Java by <a href="https://github.com/pepipost/pepipost-sdk-java" target="_blank">  clicking here </a> .
+
+### Basic Example
+
+```java
+import io.swagger.client.*;
+import io.swagger.client.auth.*;
+import io.swagger.client.model.*;
+import io.swagger.client.api.EmailApi;
+
+import java.io.File;
+import java.util.*;
+
+public class Example {
+
+    public static void main(String[] args) {
+        //Getting the SDK object
+        EmailApi pepipostSDK = new EmailApi();
+
+        //Getting the data object
+        Emailv1 data = new Emailv1(); // Emailv1 | Data in JSON format
+
+        //setting the apikey
+        data.setApiKey("yoursecretapikey");
+
+        //setting the data
+        EmailDetails email_details = new EmailDetails(); // Emailv1 | Data in JSON format
+        email_details.setFromname("yourfromname");
+        email_details.setFrom("from@example.com");
+        email_details.subject("This is the test email subject sent via Pepipost Java SDK");
+        email_details.setContent("<p> hi, this is a test email sent via Pepipost Java SDK using its JSON API.</p>");
+        data.setEmailDetails(email_details);
+
+        //adding recipients
+        List<String> recipients = new ArrayList<String>();
+        recipients.add("to@example.com");
+        data.setRecipients(recipients);
+
+        //making the call
+        try {
+            pepipostSDK.apiWebSendJsonPost(data);
+            System.out.println("Email sent successfully.");
+        } catch (ApiException e) {
+            System.out.println("Exception occurred while calling Pepipost API");
+            System.out.println("Errormessage("+e.getMessage()+")");
+            System.out.println("Errorcode("+e.getCode()+")");
+            //e.printStackTrace();
+        }
+    }
+}
+
+```
+
+## Integrating with Perl
+
+Its recommended to use Peipost SDK for Perl in order to integrate Pepipost services with applications written in Perl. You can get Pepipost SDK for Perl by <a href="https://github.com/pepipost/pepipost-sdk-perl" target="_blank">  clicking here </a> .
+
+### Basic Example
+
+```perl
+#!/usr/bin/perl
+use lib 'lib';
+use strict;
+use warnings;
+# load the API package
+use WWW::Pepipost::EmailApi;
+
+# load the models
+use WWW::Pepipost::Object::Attributes;
+use WWW::Pepipost::Object::EmailDetails;
+use WWW::Pepipost::Object::Emailv1;
+use WWW::Pepipost::Object::Files;
+use WWW::Pepipost::Object::Settings;
+
+# for displaying the API response data
+use Data::Dumper;
+
+my $email = WWW::Pepipost::EmailApi->new();
+my $data = WWW::Pepipost::Object::Emailv1->new(); # Emailv1 | Data in JSON format
+
+$data->{'api_key'} = 'yoursecretkey';
+$data->{'recipients'} = ['recipient@example.com'];
+$data->{'email_details'}{'subject'} = 'This is a test email subject sent using Pepipost SDK for Perl';
+$data->{'email_details'}{'from'} = 'from@example.com';
+$data->{'email_details'}{'content'} = 'This is a test email content sent using Pepipost SDK for Perl';
+
+
+eval {
+    my $response = $email->send(data => $data);
+    print "response($response)\n";
+};
+if ($@) {
+    warn "Exception when calling EmailApi->send: $@\n";
+}
+
+```
+
+## Integrating with C# #
+
+Its recommended to use Peipost SDK for C# in order to integrate Pepipost services with applications written in C#. You can get Pepipost SDK for C# by <a href="https://github.com/pepipost/pepipost-sdk-csharp" target="_blank">  clicking here </a> .
+
+### Basic Example
+
+```java
+using System;
+using IO.Swagger.Api;
+using IO.Swagger.Client;
+using IO.Swagger.Model;
+using Newtonsoft.Json;
+
+namespace youconsoleapp
+{
+    class MainClass
+    {
+        public static void Main (string[] args)
+        {
+            //Prepare the data
+            Emailv1 data = new Emailv1 ();
+            data.ApiKey = "yoursecretapikey";
+
+
+            //email_details Model
+            EmailDetails email_details = new EmailDetails ();
+            email_details.Fromname = "sender name";
+            email_details.From = "from@example.com";
+            email_details.Subject = "Test email sent using Pepiopst Csharp SDK";
+            email_details.Content = "<p>This email is sent using Pepipost CSharp SDK</p>";
+
+            System.Collections.Generic.List<string> recipients = new System.Collections.Generic.List<string> {"recipient@example.com"};
+
+            //Combine all
+            data.Recipients = recipients;
+            data.EmailDetails = email_details;
+
+            //Call the API method
+            EmailApi email = new EmailApi ();
+
+            //For debug print outgoing json
+            //String data_json = JsonConvert.SerializeObject (data);
+            //System.Console.WriteLine ("Data JSON "+ data_json);
+
+            var response = email.CreateApiWebSendJson (data);
+            System.Console.WriteLine ("response"+response.ToString());
+        }
+    }
+}
+
+```
