@@ -363,6 +363,89 @@ function callback_mail_sent(err_msg,parsed,context){
 }
 ```
 
+## Integrating with NodeJS - Nodemailer
+
+Nodemailer is a famous NodeJS library to send email. 
+
+You can know more about Nodemailer by <a href="https://github.com/nodemailer/nodemailer" target="_blank">  clicking here </a> .
+
+Please follow the below steps, in order to integerate Pepipost with Nodemailer:
+
+You can install it using npm "npm install nodemailer". 
+
+
+### Basic Example for Nodemailer version above v0.7.1
+
+```js
+var nodemailer = require('nodemailer');
+//below var smtpTransport not required for Nodemailer version equal or below v0.7.1
+var smtpTransport = require("nodemailer-smtp-transport");
+
+// Create a SMTP transport object
+var transport = nodemailer.createTransport(smtpTransport( {
+        host: "smtp.pepipost.com",
+        port: 2525,
+        auth: {
+            user: "yoursmtpusername",
+            pass: "yoursmtppassword"
+        }
+    }));
+/*
+//Use this code for Nodemailer version equal or below v0.7.1
+var transport = nodemailer.createTransport("SMTP", {
+        //service: 'Pepipost',
+        host: "smtp.pepipost.com",
+        port: 2525,
+        auth: {
+            user: "yoursmtpusername",
+            pass: "yoursmtppassword"
+        }
+    });
+*/
+console.log('SMTP Configured');
+
+// Message object
+var message = { 
+
+    // sender info
+    from: 'Sender Name <sender@example.com>',
+
+    // Comma separated list of recipients
+    to: '"Receiver Name" <recipient@example.com>',
+
+    // Subject of the message
+    subject: 'Nodemailer is unicode friendly ✔', 
+
+    // plaintext body
+    text: 'Test mail sent using Nodemailer with Pepipost',
+
+    // HTML body
+    html:'<p><b>Hello</b> Test mail sent using Nodemailer with Pepipost</p>'+
+         '<p>Thank you.</p>'
+
+    //For adding X-APIHEADER, uncomment the blow lines
+    /**
+    ,headers: {
+        'X-APIHEADER':'userid1'
+    }   
+    */
+};
+
+console.log('Sending Mail');
+transport.sendMail(message, function(error){
+  if(error){
+      console.log('Error occured');
+      console.log(error.message);
+      return;
+  }
+  console.log('Message sent successfully!');
+
+  // if you don't want to use this transport object anymore, uncomment following line
+  //transport.close(); // close the connection pool
+});
+
+```
+
 ## Integrating with Java
 
 Its recommended to use Peipost SDK for Java in order to integrate Pepipost services with applications written in Java. You can get Pepipost SDK for Java by <a href="https://github.com/pepipost/pepipost-sdk-java" target="_blank">  clicking here </a> .
